@@ -107,6 +107,55 @@ import autoPreprocess from 'svelte-preprocess'
 </main>
 ```
 
+## Install storybook
+
+- run cli
+
+```bash
+npx -p @storybook/cli sb init --type svelte  --use-npm
+```
+
+- add postcss to .storybook/main.js
+
+```javascript
+const sveltePreprocess = require('svelte-preprocess')
+
+module.exports = {
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  webpackFinal: async (config) => {
+    const svelteLoader = config.module.rules.find(
+      (r) => r.loader && r.loader.includes('svelte-loader'),
+    )
+    svelteLoader.options = {
+      ...svelteLoader.options,
+      preprocess: sveltePreprocess({
+        postcss: {
+          plugins: [
+            require('tailwindcss'),
+            require('autoprefixer'),
+            require('postcss-nested'),
+          ],
+        },
+      }),
+    }
+
+    return config
+  },
+}
+```
+
+- preload tailwindcss in preview-head.html
+
+```javascript
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.6/tailwind.min.css"
+  integrity="sha512-l7qZAq1JcXdHei6h2z8h8sMe3NbMrmowhOl+QkP3UhifPpCW2MC4M0i26Y8wYpbz1xD9t61MLT9L1N773dzlOA=="
+  crossorigin="anonymous"
+/>
+```
+
 # svelte app
 
 This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
