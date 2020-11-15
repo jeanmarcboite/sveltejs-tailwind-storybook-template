@@ -156,6 +156,20 @@ module.exports = {
 />
 ```
 
+## Install electron
+
+```bash
+npm i chokidar cross-env electron npm-run-all --save-dev
+```
+
+- add electron.js, modify package.json
+- relativise pathes in public/index.html
+
+```javascript
+	<link rel='stylesheet' href='build/bundle.css'>
+<script defer src="build/bundle.js"></script>
+```
+
 # svelte app
 
 This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
